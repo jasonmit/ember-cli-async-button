@@ -101,7 +101,10 @@ The callback for closure actions will be removed in future versions.`,
       if (!this.isDestroyed) {
         set(this, 'textState', 'fulfilled');
       }
-    }).catch(() => {
+    }).catch((e) => {
+      // eslint-disable-next-line no-console
+      console.error(e);
+
       if (!this.isDestroyed) {
         set(this, 'textState', 'rejected');
       }

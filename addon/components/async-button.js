@@ -1,13 +1,12 @@
 import { deprecate } from '@ember/application/deprecations';
+import Component from '@ember/component';
 import {
   getWithDefault,
   observer,
   computed,
   set,
   get
-} from '@ember/object';
-import Component from '@ember/component';
-import layout from '../templates/components/async-button';
+} from '@ember/object';import layout from '../templates/components/async-button';
 
 let positionalParamsMixin = {
   positionalParams: 'params'
@@ -16,24 +15,18 @@ let positionalParamsMixin = {
 const ButtonComponent = Component.extend(positionalParamsMixin, {
   layout,
   tagName: 'button',
-  textState: 'default',
-  asyncState: computed.alias('default'),
-  reset: false,
+  type: 'submit',
   classNames: ['async-button'],
   classNameBindings: ['textState'],
   attributeBindings: ['disabled', 'type', '_href:href', 'tabindex'],
 
-  type: 'submit',
-
-  init() {
-    this._super(...arguments);
-    let deprecationMessage = '`ember-async-button` has been deprecated and will no longer be supported.';
-    deprecate(deprecationMessage, false, { id: 'ember-async-button.deprecate-addon', until: 'forever' });
-  },
+  reset: false,
+  textState: 'default',
 
   disabled: computed('textState', 'disableWhen', function() {
     let textState = get(this, 'textState');
     let disableWhen = get(this, 'disableWhen');
+
     return disableWhen || textState === 'pending';
   }),
 
@@ -102,24 +95,13 @@ The callback for closure actions will be removed in future versions.`,
         set(this, 'textState', 'fulfilled');
       }
     }).catch((e) => {
-      // eslint-disable-next-line no-console
-      console.error(e);
-
       if (!this.isDestroyed) {
         set(this, 'textState', 'rejected');
       }
+
+      throw e;
     });
   }),
-
-  setUnknownProperty(key, value) {
-    if (key === 'resolved') {
-      deprecate(`The 'resolved' property is deprecated. Please use 'fulfilled'`, false);
-      key = 'fulfilled';
-    }
-
-    this[key] = null;
-    this.set(key, value);
-  },
 
   _href: computed('href', function() {
     let href = get(this, 'href');

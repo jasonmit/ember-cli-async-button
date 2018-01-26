@@ -1,6 +1,6 @@
 {
   "name": "@jasonmit/ember-async-button",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "When running async actions ensuring disabling of the button, re-enabling, and handling promise rejections is pretty boilerplate. This component packages up that behavior.",
   "directories": {
     "doc": "doc",
